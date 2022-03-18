@@ -11,6 +11,7 @@ function Game() {
   this.menu = [
     "PARCELS: Lists the parcels you have and their addresses",
     "MOVE-{Location}: Will change your location",
+    "AUTODRIVE : Will move to all addresses and deliver all parcels, then return to Post Office",
     "DELIVER: Will deliver any matching parcels at your current location",
     "EXIT: Quits the game",
   ];
@@ -78,6 +79,10 @@ function Game() {
         case check === "deliver":
           this.robot.deliver();
           console.log("\n");
+          break;
+        case check === "autodrive":
+          this.robot.autoDrive();
+          console.log("autodriving", "\n");
           break;
         default:
           console.log(

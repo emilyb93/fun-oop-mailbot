@@ -1,32 +1,25 @@
-function Building() {
-  const newBuilding = {
-    address: "",
-    mailbox: [],
-  };
-
-  return newBuilding;
+class Building {
+  constructor() {
+    (this.address = ""), (this.mailbox = []);
+  }
 }
 
-function Village() {
-  const newVillage = {
-    buildings: [],
-    roads: [],
-    addBuilding,
-    addRoad,
-    pathsFrom,
-  };
+class Village {
+  constructor() {
+    (this.buildings = []), (this.roads = []);
+  }
 
-  function addBuilding(newBuilding) {
+  addBuilding(newBuilding) {
     this.buildings.push(newBuilding);
     return this;
   }
 
-  function addRoad(...newBuildings) {
+  addRoad(...newBuildings) {
     this.roads.push([...newBuildings]);
     return this;
   }
 
-  function pathsFrom(building) {
+  pathsFrom(building) {
     const paths = [];
     this.roads.forEach((road) => {
       if (road.indexOf(building) === 0) {
@@ -37,22 +30,17 @@ function Village() {
     });
     return paths;
   }
-
-  return newVillage;
 }
 
-function Robot(village) {
-  const newRobot = {
-    village,
-    location: "Post Office",
-    parcels: [],
-    move,
-    pickUp,
-    deliver,
-  };
+class Robot {
+  constructor(village) {
+    (this.village = village),
+      (this.location = "Post Office"),
+      (this.parcels = []);
+  }
 
-  function move(locationAddress) {
-    if (this.village.pathsFrom(locationAddress)) {
+  move(locationAddress) {
+    if (this.village.pathsFrom(locationAddress).length >= 1) {
       this.location = locationAddress;
       console.log(`Successfully moved to ${locationAddress}`);
     } else {
@@ -61,12 +49,12 @@ function Robot(village) {
     return this;
   }
 
-  function pickUp(parcels) {
-    this.parcels.push(parcels);
+  pickUp(...parcels) {
+    this.parcels.push(...parcels);
     return this;
   }
 
-  function deliver() {
+  deliver() {
     this.parcels = this.parcels.filter((parcel) => {
       const correctAddress = parcel.address === this.location;
       if (correctAddress) {
@@ -81,6 +69,44 @@ function Robot(village) {
     return this;
   }
 
-  return newRobot;
+  autoDrive() {
+    const travelHistory = ["Post Office"];
+    while (this.parcels.length > 0) {
+      // this.parcels.forEach(({ address }) => {
+      //   if (this.village.pathsFrom(this.location).includes(address)) {
+      //     this.move(address);
+      //     this.deliver();
+      //     travelHistory.push(address);
+      //   } else {
+      //     const randomPath = this.village.pathsFrom(this.location)[
+      //       Math.round(Math.random())
+      //     ];
+      //     this.move(randomPath);
+      //     this.deliver();
+      //     travelHistory.push(randomPath);
+      //   }
+      // });
+    }
+
+    travelHistory.pop();
+    while (this.location !== "Post Office") {
+      this.move(travelHistory.pop());
+      if (this.village.pathsFrom(this.location).includes("Post Office")) {
+        this.move("Post Office");
+      }
+    }
+    // if (this.village.pathsFrom(this.location).includes("Post Office")) {
+    //   this.move("Post Office");
+    // } else {
+    //   this.move(
+    //     this.village.pathsFrom(this.location)[Math.round(Math.random())]
+    //   );
+    // }
+
+    // leave the post office
+    // go through every possible address at least once
+    // deliver at each address
+    // once all parcels are done, return to PO
+  }
 }
 module.exports = { Building, Village, Robot };
