@@ -24,9 +24,9 @@ class Village {
 
     this.roads.forEach((road) => {
       if (road.indexOf(building) === 0) {
-        paths.push(road.pop());
+        paths.push(road[1]);
       } else if (road.indexOf(building) === 1) {
-        paths.push(road.shift());
+        paths.push(road[0]);
       }
     });
     return paths;
@@ -72,6 +72,8 @@ class Robot {
 
   autoDrive() {
     const travelHistory = ["Post Office"];
+
+    const paths = { "Post Office": {} };
 
     while (this.parcels.length > 0) {
       this.parcels.forEach(({ address }) => {
