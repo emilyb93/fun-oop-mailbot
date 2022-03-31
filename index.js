@@ -21,11 +21,12 @@ class Village {
 
   pathsFrom(building) {
     const paths = [];
+
     this.roads.forEach((road) => {
       if (road.indexOf(building) === 0) {
-        paths.push(road[1]);
+        paths.push(road.pop());
       } else if (road.indexOf(building) === 1) {
-        paths.push(road[0]);
+        paths.push(road.shift());
       }
     });
     return paths;
@@ -71,21 +72,26 @@ class Robot {
 
   autoDrive() {
     const travelHistory = ["Post Office"];
+
     while (this.parcels.length > 0) {
-      // this.parcels.forEach(({ address }) => {
-      //   if (this.village.pathsFrom(this.location).includes(address)) {
-      //     this.move(address);
-      //     this.deliver();
-      //     travelHistory.push(address);
-      //   } else {
-      //     const randomPath = this.village.pathsFrom(this.location)[
-      //       Math.round(Math.random())
-      //     ];
-      //     this.move(randomPath);
-      //     this.deliver();
-      //     travelHistory.push(randomPath);
-      //   }
-      // });
+      this.parcels.forEach(({ address }) => {
+        if (this.village.pathsFrom(this.location).includes(address)) {
+          this.move(address);
+          this.deliver();
+          travelHistory.push(address);
+        } else {
+          const possiblePaths = this.village.pathsFrom(this.location);
+          const notVisitedPaths = possiblePaths.filter((path) => {
+            if (travelHistory.includes(path)) return false;
+            return true;
+          });
+          const randomPath = notVisitedPaths[Math.round(Math.random())];
+
+          this.move(randomPath);
+          this.deliver();
+          travelHistory.push(randomPath);
+        }
+      });
     }
 
     travelHistory.pop();
@@ -95,18 +101,16 @@ class Robot {
         this.move("Post Office");
       }
     }
-    // if (this.village.pathsFrom(this.location).includes("Post Office")) {
-    //   this.move("Post Office");
-    // } else {
-    //   this.move(
-    //     this.village.pathsFrom(this.location)[Math.round(Math.random())]
-    //   );
-    // }
 
     // leave the post office
     // go through every possible address at least once
     // deliver at each address
     // once all parcels are done, return to PO
+
+    //create list of possible paths
+    // find shortest list and execute it
+
+    // find weights from all buildings back to post office so there is defined finish
   }
 }
 module.exports = { Building, Village, Robot };
